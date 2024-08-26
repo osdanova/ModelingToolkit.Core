@@ -19,5 +19,35 @@ namespace ModelingToolkit.Core
             RotationQ = Quaternion.Identity;
             Translation = Vector3.Zero;
         }
+
+        // Returns the Transformation Matrix for the MtTransform
+        public Matrix4x4 GetTransformationMatrix(bool useEuler = false)
+        {
+            Matrix4x4 composed = Matrix4x4.CreateTranslation(Translation);
+            composed *= Matrix4x4.CreateScale(Scale);
+
+            if (!useEuler)
+            {
+                Matrix4x4 rotationMatrix = Matrix4x4.CreateFromQuaternion(RotationQ);
+                composed *= rotationMatrix;
+            }
+            else
+            {
+                Matrix4x4 rotationMatrix = Matrix4x4.CreateRotationX(Rotation.X);
+                rotationMatrix *= Matrix4x4.CreateRotationY(Rotation.Y);
+                rotationMatrix *= Matrix4x4.CreateRotationZ(Rotation.Z);
+                composed *= rotationMatrix;
+            }
+
+            return composed;
+        }
+
+        // Normalizes the values of the euler translations to be within [-2 PI, 2 PI]
+        public void NormalizeEuler()
+        {
+            Vector3 tempTranslation = Translation;
+            MtTools.NormalizeEuler(tempTranslation, (float)(2 * Math.PI));
+            Translation = tempTranslation;
+        }
     }
 }

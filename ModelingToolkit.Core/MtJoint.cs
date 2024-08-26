@@ -59,45 +59,39 @@ namespace ModelingToolkit.Core
 
         public void Compose(bool preferEuler = false)
         {
-            if (AbsoluteTransform.Scale != null && (AbsoluteTransform.Rotation != null || AbsoluteTransform.RotationQ != null) && AbsoluteTransform.Translation != null)
+            // Absolute
+            Matrix4x4 absScaleMatrix = Matrix4x4.CreateScale(AbsoluteTransform.Scale);
+            Matrix4x4 absRotationMatrix;
+            if (!preferEuler)
             {
-                Matrix4x4 scaleMatrix = Matrix4x4.CreateScale(AbsoluteTransform.Scale);
-                Matrix4x4 rotationMatrix;
-                if (!preferEuler && AbsoluteTransform.RotationQ != null)
-                {
-                    rotationMatrix = Matrix4x4.CreateFromQuaternion(AbsoluteTransform.RotationQ);
-                }
-                else
-                {
-                    Matrix4x4 rotationMatrixX = Matrix4x4.CreateRotationX(AbsoluteTransform.Rotation.X);
-                    Matrix4x4 rotationMatrixY = Matrix4x4.CreateRotationY(AbsoluteTransform.Rotation.Y);
-                    Matrix4x4 rotationMatrixZ = Matrix4x4.CreateRotationZ(AbsoluteTransform.Rotation.Z);
-                    rotationMatrix = rotationMatrixX * rotationMatrixY * rotationMatrixZ;
-                }
-                Matrix4x4 translationMatrix = Matrix4x4.CreateTranslation(AbsoluteTransform.Translation);
-
-                AbsoluteTransformationMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+                absRotationMatrix = Matrix4x4.CreateFromQuaternion(AbsoluteTransform.RotationQ);
             }
-
-            if (RelativeTransform.Scale != null && (RelativeTransform.Rotation != null || RelativeTransform.RotationQ != null) && RelativeTransform.Translation != null)
+            else
             {
-                Matrix4x4 scaleMatrix = Matrix4x4.CreateScale(RelativeTransform.Scale);
-                Matrix4x4 rotationMatrix;
-                if (!preferEuler && RelativeTransform.RotationQ != null)
-                {
-                    rotationMatrix = Matrix4x4.CreateFromQuaternion(RelativeTransform.RotationQ);
-                }
-                else
-                {
-                    Matrix4x4 rotationMatrixX = Matrix4x4.CreateRotationX(RelativeTransform.Rotation.X);
-                    Matrix4x4 rotationMatrixY = Matrix4x4.CreateRotationY(RelativeTransform.Rotation.Y);
-                    Matrix4x4 rotationMatrixZ = Matrix4x4.CreateRotationZ(RelativeTransform.Rotation.Z);
-                    rotationMatrix = rotationMatrixX * rotationMatrixY * rotationMatrixZ;
-                }
-                Matrix4x4 translationMatrix = Matrix4x4.CreateTranslation(RelativeTransform.Translation);
-
-                RelativeTransformationMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+                Matrix4x4 absRotationMatrixX = Matrix4x4.CreateRotationX(AbsoluteTransform.Rotation.X);
+                Matrix4x4 absRotationMatrixY = Matrix4x4.CreateRotationY(AbsoluteTransform.Rotation.Y);
+                Matrix4x4 absRotationMatrixZ = Matrix4x4.CreateRotationZ(AbsoluteTransform.Rotation.Z);
+                absRotationMatrix = absRotationMatrixX * absRotationMatrixY * absRotationMatrixZ;
             }
+            Matrix4x4 absTranslationMatrix = Matrix4x4.CreateTranslation(AbsoluteTransform.Translation);
+            AbsoluteTransformationMatrix = absScaleMatrix * absRotationMatrix * absTranslationMatrix;
+
+            // Relative
+            Matrix4x4 relScaleMatrix = Matrix4x4.CreateScale(RelativeTransform.Scale);
+            Matrix4x4 relRotationMatrix;
+            if (!preferEuler)
+            {
+                relRotationMatrix = Matrix4x4.CreateFromQuaternion(RelativeTransform.RotationQ);
+            }
+            else
+            {
+                Matrix4x4 relRotationMatrixX = Matrix4x4.CreateRotationX(RelativeTransform.Rotation.X);
+                Matrix4x4 relRotationMatrixY = Matrix4x4.CreateRotationY(RelativeTransform.Rotation.Y);
+                Matrix4x4 relRotationMatrixZ = Matrix4x4.CreateRotationZ(RelativeTransform.Rotation.Z);
+                relRotationMatrix = relRotationMatrixX * relRotationMatrixY * relRotationMatrixZ;
+            }
+            Matrix4x4 relTranslationMatrix = Matrix4x4.CreateTranslation(RelativeTransform.Translation);
+            RelativeTransformationMatrix = relScaleMatrix * relRotationMatrix * relTranslationMatrix;
         }
     }
 }

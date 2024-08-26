@@ -88,5 +88,18 @@ namespace ModelingToolkit.Core
 
             return angles;
         }
+
+        // Normalizes the vector so that its values are within [-range, range]
+        public static void NormalizeEuler(Vector3 vector, float range)
+        {
+            NormalizeEuler(vector.X, range);
+            NormalizeEuler(vector.Y, range);
+            NormalizeEuler(vector.Z, range);
+        }
+        // Normalizes the value so that its values are within [-range, range]
+        public static void NormalizeEuler(float value, float range)
+        {
+            if (value < -range || value > range) value = value % range;
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace ModelingToolkit.Core
         public List<MtVertex> Vertices { get; set; }
         public List<MtFace> Faces { get; set; }
         public List<MtTriangleStrip> TriangleStrips { get; set; }
+        public bool AreFacesDoubleSided { get; set; }
 
         public MtMesh()
         {
