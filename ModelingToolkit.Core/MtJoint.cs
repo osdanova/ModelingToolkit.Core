@@ -41,7 +41,7 @@ namespace ModelingToolkit.Core
                 AbsoluteTransform.Translation = translationQ;
 
                 MtTools.DecomposeEuler((Matrix4x4)AbsoluteTransformationMatrix, out Vector3 scale, out Vector3 rotation, out Vector3 translation);
-                AbsoluteTransform.Translation = rotation;
+                AbsoluteTransform.Rotation = rotation;
             }
 
             if (RelativeTransformationMatrix != null)

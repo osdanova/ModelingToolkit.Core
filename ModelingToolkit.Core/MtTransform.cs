@@ -20,6 +20,11 @@ namespace ModelingToolkit.Core
             Translation = Vector3.Zero;
         }
 
+        public override string ToString()
+        {
+            return "TRS: " + Translation + " " + Rotation + " " + Scale + " | Q: " + RotationQ;
+        }
+
         // Returns the Transformation Matrix for the MtTransform
         public Matrix4x4 GetTransformationMatrix(bool useEuler = false)
         {
